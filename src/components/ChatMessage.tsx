@@ -1,0 +1,74 @@
+import ReactMarkdown from "react-markdown";
+import { motion } from "framer-motion";
+import { Bot, User, Copy, Check } from "lucide-react";
+import { useState } from "react";
+
+export interface Message {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  timestamp: Date;
+}
+
+interface ChatMessageProps {
+  message: Message;
+}
+
+export function ChatMessage({ message }: ChatMessageProps) {
+  const [copied, setCopied] = useState(false);
+  const isUser = message.role === "user";
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(message.content);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className={`flex gap-3 px-4 py-4 ${isUser ? "justify-end" : ""}`}
+    >
+      {!isUser && (
+        <div className="shrink-0 w-8 h-8 rounded-lg gradient-bg flex items-center justify-center">
+          <Bot size={16} className="text-primary-foreground" />
+        </div>
+      )}
+
+      <div className={`max-w-[75%] group ${isUser ? "order-first" : ""}`}>
+        <div
+          className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${
+            isUser
+              ? "bg-user-bubble text-user-bubble-foreground rounded-br-md"
+              : "bg-ai-bubble text-ai-bubble-foreground rounded-bl-md"
+          }`}
+        >
+          {isUser ? (
+            <p>{message.content}</p>
+          ) : (
+            <div className="prose prose-sm prose-invert max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
+              <ReactMarkdown>{message.content}</ReactMarkdown>
+            </div>
+          )}
+        </div>
+
+        {!isUser && (
+          <button
+            onClick={handleCopy}
+            className="mt-1 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground p-1"
+          >
+            {copied ? <Check size={12} /> : <Copy size={12} />}
+          </button>
+        )}
+      </div>
+
+      {isUser && (
+        <div className="shrink-0 w-8 h-8 rounded-lg bg-secondary flex items-center justify-center">
+          <User size={16} className="text-muted-foreground" />
+        </div>
+      )}
+    </motion.div>
+  );
+}
