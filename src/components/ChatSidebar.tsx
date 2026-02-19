@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { MessageSquare, Plus, Crown, Trash2, X } from "lucide-react";
+import { MessageSquare, Plus, Crown, Trash2, X, Store } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 export interface ChatItem {
@@ -28,6 +29,7 @@ export function ChatSidebar({
   isOpen,
   onClose,
 }: ChatSidebarProps) {
+  const navigate = useNavigate();
   return (
     <>
       {/* Mobile overlay */}
@@ -67,6 +69,13 @@ export function ChatSidebar({
           >
             <Plus size={16} />
             New Chat
+          </button>
+          <button
+            onClick={() => { navigate("/marketplace"); onClose(); }}
+            className="w-full flex items-center gap-2 px-4 py-2.5 rounded-lg border border-border bg-muted hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors text-sm"
+          >
+            <Store size={16} />
+            AI Marketplace
           </button>
         </div>
 
