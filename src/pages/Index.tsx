@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import { Menu } from "lucide-react";
+import { Menu, LogIn, LogOut } from "lucide-react";
+import { lovable } from "@/integrations/lovable/index";
 import { ChatSidebar, ChatItem } from "@/components/ChatSidebar";
 import { ChatMessage, Message } from "@/components/ChatMessage";
 import { ChatInput } from "@/components/ChatInput";
