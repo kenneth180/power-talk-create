@@ -242,10 +242,37 @@ const Index = () => {
           </button>
           <h1 className="text-sm font-semibold gradient-text">PowerChat</h1>
           <span className="text-[10px] text-muted-foreground">Gemini 3 Flash</span>
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-auto flex items-center gap-3">
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-secondary text-muted-foreground border border-border">
               Free
             </span>
+            {user ? (
+              <div className="flex items-center gap-2">
+                {user.user_metadata?.avatar_url ? (
+                  <img src={user.user_metadata.avatar_url} alt="" className="w-7 h-7 rounded-full border border-border" />
+                ) : (
+                  <div className="w-7 h-7 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-xs font-bold">
+                    {(user.user_metadata?.full_name?.[0] || user.email?.[0] || "?").toUpperCase()}
+                  </div>
+                )}
+                <span className="text-xs text-foreground hidden sm:block max-w-[120px] truncate">
+                  {user.user_metadata?.full_name || user.email}
+                </span>
+                <button onClick={signOut} className="p-1.5 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors" title="Sign out">
+                  <LogOut size={16} />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={async () => {
+                  await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
+                }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg gradient-bg text-primary-foreground text-xs font-medium hover:opacity-90 transition-opacity"
+              >
+                <LogIn size={14} />
+                Sign in
+              </button>
+            )}
           </div>
         </header>
 
