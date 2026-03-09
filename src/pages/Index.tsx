@@ -134,7 +134,7 @@ const Index = () => {
             <Menu size={20} />
           </button>
           <h1 className="text-sm font-semibold gradient-text">PowerChat</h1>
-          <span className="text-[10px] text-muted-foreground">GPT-5.2</span>
+          <span className="text-[10px] text-muted-foreground">Gemini 3 Flash</span>
           <div className="ml-auto flex items-center gap-2">
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-secondary text-muted-foreground border border-border">
               Free
