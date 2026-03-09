@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { Menu } from "lucide-react";
 import { ChatSidebar, ChatItem } from "@/components/ChatSidebar";
 import { ChatMessage, Message } from "@/components/ChatMessage";
@@ -8,8 +8,11 @@ import { WelcomeScreen } from "@/components/WelcomeScreen";
 import { AnimatePresence } from "framer-motion";
 import { streamChat } from "@/lib/streamChat";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
+  const { user } = useAuth();
   const [chats, setChats] = useState<ChatItem[]>([]);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Record<string, Message[]>>({});
@@ -20,32 +23,109 @@ const Index = () => {
 
   const activeMessages = activeChatId ? messages[activeChatId] || [] : [];
 
+  // Load chats from DB when user signs in
+  useEffect(() => {
+    if (!user) {
+      setChats([]);
+      setMessages({});
+      setActiveChatId(null);
+      return;
+    }
+    const loadChats = async () => {
+      const { data: dbChats } = await supabase
+        .from("chats")
+        .select("*")
+        .order("updated_at", { ascending: false });
+
+      if (!dbChats) return;
+
+      const chatItems: ChatItem[] = dbChats.map((c: any) => ({
+        id: c.id,
+        title: c.title,
+        lastMessage: "",
+        timestamp: new Date(c.updated_at),
+      }));
+      setChats(chatItems);
+
+      // Load all messages
+      const { data: dbMessages } = await supabase
+        .from("chat_messages")
+        .select("*")
+        .in("chat_id", dbChats.map((c: any) => c.id))
+        .order("created_at", { ascending: true });
+
+      if (dbMessages) {
+        const msgMap: Record<string, Message[]> = {};
+        for (const m of dbMessages as any[]) {
+          if (!msgMap[m.chat_id]) msgMap[m.chat_id] = [];
+          msgMap[m.chat_id].push({
+            id: m.id,
+            role: m.role as "user" | "assistant",
+            content: m.content,
+            timestamp: new Date(m.created_at),
+          });
+        }
+        setMessages(msgMap);
+      }
+    };
+    loadChats();
+  }, [user]);
+
   const scrollToBottom = useCallback(() => {
     setTimeout(() => {
       scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
     }, 50);
   }, []);
 
-  const createNewChat = useCallback((firstMessage?: string) => {
-    const id = Date.now().toString();
-    const title = firstMessage ? firstMessage.slice(0, 40) + (firstMessage.length > 40 ? "..." : "") : "New Chat";
-    const chat: ChatItem = { id, title, lastMessage: "", timestamp: new Date() };
-    setChats((prev) => [chat, ...prev]);
-    setActiveChatId(id);
-    setMessages((prev) => ({ ...prev, [id]: [] }));
-    setSidebarOpen(false);
-    return id;
-  }, []);
+  const createNewChat = useCallback(
+    async (firstMessage?: string) => {
+      const title = firstMessage
+        ? firstMessage.slice(0, 40) + (firstMessage.length > 40 ? "..." : "")
+        : "New Chat";
+
+      if (user) {
+        const { data, error } = await supabase
+          .from("chats")
+          .insert({ user_id: user.id, title })
+          .select()
+          .single();
+        if (error || !data) {
+          const id = Date.now().toString();
+          const chat: ChatItem = { id, title, lastMessage: "", timestamp: new Date() };
+          setChats((prev) => [chat, ...prev]);
+          setActiveChatId(id);
+          setMessages((prev) => ({ ...prev, [id]: [] }));
+          setSidebarOpen(false);
+          return id;
+        }
+        const chat: ChatItem = { id: data.id, title, lastMessage: "", timestamp: new Date() };
+        setChats((prev) => [chat, ...prev]);
+        setActiveChatId(data.id);
+        setMessages((prev) => ({ ...prev, [data.id]: [] }));
+        setSidebarOpen(false);
+        return data.id;
+      } else {
+        const id = Date.now().toString();
+        const chat: ChatItem = { id, title, lastMessage: "", timestamp: new Date() };
+        setChats((prev) => [chat, ...prev]);
+        setActiveChatId(id);
+        setMessages((prev) => ({ ...prev, [id]: [] }));
+        setSidebarOpen(false);
+        return id;
+      }
+    },
+    [user]
+  );
 
   const sendMessage = useCallback(
     async (content: string) => {
       let chatId = activeChatId;
       if (!chatId) {
-        chatId = createNewChat(content);
+        chatId = await createNewChat(content);
       }
 
-      const userMsg: Message = { id: Date.now().toString(), role: "user", content, timestamp: new Date() };
-      
+      const userMsg: Message = { id: crypto.randomUUID(), role: "user", content, timestamp: new Date() };
+
       setMessages((prev) => ({ ...prev, [chatId!]: [...(prev[chatId!] || []), userMsg] }));
       setChats((prev) =>
         prev.map((c) =>
@@ -57,12 +137,27 @@ const Index = () => {
       setIsLoading(true);
       scrollToBottom();
 
-      // Build conversation history for the AI
+      // Save user message to DB
+      if (user) {
+        await supabase.from("chat_messages").insert({
+          chat_id: chatId,
+          role: "user",
+          content,
+        });
+        // Update chat title if needed
+        const chat = chats.find((c) => c.id === chatId);
+        if (chat?.title === "New Chat") {
+          await supabase.from("chats").update({ title: content.slice(0, 40), updated_at: new Date().toISOString() }).eq("id", chatId);
+        } else {
+          await supabase.from("chats").update({ updated_at: new Date().toISOString() }).eq("id", chatId);
+        }
+      }
+
       const currentMsgs = [...(messages[chatId!] || []), userMsg];
       const apiMessages = currentMsgs.map((m) => ({ role: m.role, content: m.content }));
 
       let assistantSoFar = "";
-      const assistantId = (Date.now() + 1).toString();
+      const assistantId = crypto.randomUUID();
 
       await streamChat({
         messages: apiMessages,
@@ -83,14 +178,22 @@ const Index = () => {
               ...prev,
               [chatId!]: [
                 ...chatMsgs,
-                { id: assistantId, role: "assistant", content: assistantSoFar, timestamp: new Date() },
+                { id: assistantId, role: "assistant" as const, content: assistantSoFar, timestamp: new Date() },
               ],
             };
           });
           scrollToBottom();
         },
-        onDone: () => {
+        onDone: async () => {
           setIsLoading(false);
+          // Save assistant message to DB
+          if (user && assistantSoFar) {
+            await supabase.from("chat_messages").insert({
+              chat_id: chatId,
+              role: "assistant",
+              content: assistantSoFar,
+            });
+          }
         },
         onError: (error) => {
           setIsLoading(false);
@@ -98,7 +201,7 @@ const Index = () => {
         },
       });
     },
-    [activeChatId, createNewChat, scrollToBottom, messages, toast]
+    [activeChatId, createNewChat, scrollToBottom, messages, toast, user, chats]
   );
 
   const handleNewChat = () => {
@@ -106,7 +209,7 @@ const Index = () => {
     setSidebarOpen(false);
   };
 
-  const handleDeleteChat = (id: string) => {
+  const handleDeleteChat = async (id: string) => {
     setChats((prev) => prev.filter((c) => c.id !== id));
     setMessages((prev) => {
       const n = { ...prev };
@@ -114,6 +217,9 @@ const Index = () => {
       return n;
     });
     if (activeChatId === id) setActiveChatId(null);
+    if (user) {
+      await supabase.from("chats").delete().eq("id", id);
+    }
   };
 
   return (
@@ -151,7 +257,7 @@ const Index = () => {
                 <ChatMessage key={msg.id} message={msg} />
               ))}
               <AnimatePresence>
-                {isLoading && !activeMessages.some((m) => m.role === "assistant" && m.id === (Date.now() + 1).toString()) && (
+                {isLoading && !activeMessages.some((m) => m.role === "assistant" && m.content) && (
                   <TypingIndicator />
                 )}
               </AnimatePresence>
