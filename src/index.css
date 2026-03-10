@@ -53,7 +53,7 @@
     --user-bubble: 210 100% 56%;
     --user-bubble-foreground: 0 0% 100%;
     --ai-bubble: 220 14% 14%;
-    --ai-bubble-foreground: 210 20% 92%;
+    --ai-bubble-foreground: 210 100% 70%;
     --pro-gradient-start: 45 100% 55%;
     --pro-gradient-end: 30 100% 50%;
   }
