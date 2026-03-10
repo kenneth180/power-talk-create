@@ -1,6 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import { motion } from "framer-motion";
-import { Bot, User, Copy, Check } from "lucide-react";
+import { Bot, User, Copy, Check, Download } from "lucide-react";
 import { useState } from "react";
 
 export interface Message {
@@ -8,6 +8,7 @@ export interface Message {
   role: "user" | "assistant";
   content: string;
   timestamp: Date;
+  imageUrl?: string;
 }
 
 interface ChatMessageProps {
@@ -22,6 +23,14 @@ export function ChatMessage({ message }: ChatMessageProps) {
     navigator.clipboard.writeText(message.content);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleDownload = () => {
+    if (!message.imageUrl) return;
+    const a = document.createElement("a");
+    a.href = message.imageUrl;
+    a.download = `powerchat-image-${Date.now()}.png`;
+    a.click();
   };
 
   return (
@@ -48,9 +57,28 @@ export function ChatMessage({ message }: ChatMessageProps) {
           {isUser ? (
             <p>{message.content}</p>
           ) : (
-            <div className="prose prose-sm prose-invert max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
-              <ReactMarkdown>{message.content}</ReactMarkdown>
-            </div>
+            <>
+              {message.imageUrl && (
+                <div className="mb-3">
+                  <img
+                    src={message.imageUrl}
+                    alt="AI generated image"
+                    className="rounded-xl max-w-full border border-border"
+                    style={{ maxHeight: 400 }}
+                  />
+                  <button
+                    onClick={handleDownload}
+                    className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <Download size={12} />
+                    Download
+                  </button>
+                </div>
+              )}
+              <div className="prose prose-sm prose-invert max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
+                <ReactMarkdown>{message.content}</ReactMarkdown>
+              </div>
+            </>
           )}
         </div>
 
