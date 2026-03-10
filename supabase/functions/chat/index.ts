@@ -55,7 +55,7 @@ You are NOT a generic chatbot. You're the kind of AI people actually enjoy talki
             ...messages,
           ],
           stream: true,
-          max_completion_tokens: 8192,
+          max_completion_tokens: 10000,
         }),
       }
     );
