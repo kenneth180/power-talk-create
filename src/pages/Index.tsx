@@ -7,7 +7,7 @@ import { ChatInput } from "@/components/ChatInput";
 import { TypingIndicator } from "@/components/TypingIndicator";
 import { WelcomeScreen } from "@/components/WelcomeScreen";
 import { AnimatePresence } from "framer-motion";
-import { streamChat } from "@/lib/streamChat";
+import { streamChat, isImageRequest, generateImage } from "@/lib/streamChat";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -157,50 +157,92 @@ const Index = () => {
       const currentMsgs = [...(messages[chatId!] || []), userMsg];
       const apiMessages = currentMsgs.map((m) => ({ role: m.role, content: m.content }));
 
-      let assistantSoFar = "";
-      const assistantId = crypto.randomUUID();
+      // Check if this is an image generation request
+      if (isImageRequest(content)) {
+        const assistantId = crypto.randomUUID();
+        setMessages((prev) => ({
+          ...prev,
+          [chatId!]: [
+            ...(prev[chatId!] || []),
+            { id: assistantId, role: "assistant" as const, content: "🎨 Generating your image...", timestamp: new Date() },
+          ],
+        }));
+        scrollToBottom();
 
-      await streamChat({
-        messages: apiMessages,
-        onDelta: (chunk) => {
-          assistantSoFar += chunk;
-          setMessages((prev) => {
-            const chatMsgs = prev[chatId!] || [];
-            const existing = chatMsgs.find((m) => m.id === assistantId);
-            if (existing) {
+        await generateImage({
+          prompt: content,
+          onResult: async ({ imageUrl, text }) => {
+            setMessages((prev) => ({
+              ...prev,
+              [chatId!]: (prev[chatId!] || []).map((m) =>
+                m.id === assistantId ? { ...m, content: text, imageUrl } : m
+              ),
+            }));
+            setIsLoading(false);
+            if (user) {
+              await supabase.from("chat_messages").insert({
+                chat_id: chatId,
+                role: "assistant",
+                content: `[Image Generated] ${text}`,
+              });
+            }
+          },
+          onError: (error) => {
+            setMessages((prev) => ({
+              ...prev,
+              [chatId!]: (prev[chatId!] || []).map((m) =>
+                m.id === assistantId ? { ...m, content: `❌ ${error}` } : m
+              ),
+            }));
+            setIsLoading(false);
+            toast({ variant: "destructive", title: "Image Error", description: error });
+          },
+        });
+      } else {
+        let assistantSoFar = "";
+        const assistantId = crypto.randomUUID();
+
+        await streamChat({
+          messages: apiMessages,
+          onDelta: (chunk) => {
+            assistantSoFar += chunk;
+            setMessages((prev) => {
+              const chatMsgs = prev[chatId!] || [];
+              const existing = chatMsgs.find((m) => m.id === assistantId);
+              if (existing) {
+                return {
+                  ...prev,
+                  [chatId!]: chatMsgs.map((m) =>
+                    m.id === assistantId ? { ...m, content: assistantSoFar } : m
+                  ),
+                };
+              }
               return {
                 ...prev,
-                [chatId!]: chatMsgs.map((m) =>
-                  m.id === assistantId ? { ...m, content: assistantSoFar } : m
-                ),
+                [chatId!]: [
+                  ...chatMsgs,
+                  { id: assistantId, role: "assistant" as const, content: assistantSoFar, timestamp: new Date() },
+                ],
               };
-            }
-            return {
-              ...prev,
-              [chatId!]: [
-                ...chatMsgs,
-                { id: assistantId, role: "assistant" as const, content: assistantSoFar, timestamp: new Date() },
-              ],
-            };
-          });
-          scrollToBottom();
-        },
-        onDone: async () => {
-          setIsLoading(false);
-          // Save assistant message to DB
-          if (user && assistantSoFar) {
-            await supabase.from("chat_messages").insert({
-              chat_id: chatId,
-              role: "assistant",
-              content: assistantSoFar,
             });
-          }
-        },
-        onError: (error) => {
-          setIsLoading(false);
-          toast({ variant: "destructive", title: "Error", description: error });
-        },
-      });
+            scrollToBottom();
+          },
+          onDone: async () => {
+            setIsLoading(false);
+            if (user && assistantSoFar) {
+              await supabase.from("chat_messages").insert({
+                chat_id: chatId,
+                role: "assistant",
+                content: assistantSoFar,
+              });
+            }
+          },
+          onError: (error) => {
+            setIsLoading(false);
+            toast({ variant: "destructive", title: "Error", description: error });
+          },
+        });
+      }
     },
     [activeChatId, createNewChat, scrollToBottom, messages, toast, user, chats]
   );
