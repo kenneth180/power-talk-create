@@ -50,6 +50,21 @@ export function WelcomeScreen({ onSuggestion }: WelcomeScreenProps) {
             </motion.button>
           ))}
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="mt-6"
+        >
+          <button
+            onClick={() => navigate("/builder")}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl gradient-bg text-primary-foreground font-medium text-sm hover:opacity-90 transition-opacity glow-primary"
+          >
+            <Hammer size={16} />
+            Go to Builder
+          </button>
+        </motion.div>
       </div>
     </div>
   );
