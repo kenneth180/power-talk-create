@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { Zap, Image, Video, Mic, Code, BookOpen, Phone } from "lucide-react";
+import { Zap, Image, Video, Mic, Code, BookOpen, Phone, Hammer } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface WelcomeScreenProps {
   onSuggestion: (text: string) => void;
@@ -15,6 +16,7 @@ const suggestions = [
 ];
 
 export function WelcomeScreen({ onSuggestion }: WelcomeScreenProps) {
+  const navigate = useNavigate();
   return (
     <div className="flex-1 flex items-center justify-center px-4 py-12">
       <div className="max-w-2xl w-full text-center">
@@ -49,6 +51,21 @@ export function WelcomeScreen({ onSuggestion }: WelcomeScreenProps) {
             </motion.button>
           ))}
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="mt-6"
+        >
+          <button
+            onClick={() => navigate("/builder")}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl gradient-bg text-primary-foreground font-medium text-sm hover:opacity-90 transition-opacity glow-primary"
+          >
+            <Hammer size={16} />
+            Go to Builder
+          </button>
+        </motion.div>
       </div>
     </div>
   );
