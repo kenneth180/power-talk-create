@@ -16,6 +16,7 @@ const suggestions = [
 ];
 
 export function WelcomeScreen({ onSuggestion }: WelcomeScreenProps) {
+  const navigate = useNavigate();
   return (
     <div className="flex-1 flex items-center justify-center px-4 py-12">
       <div className="max-w-2xl w-full text-center">
