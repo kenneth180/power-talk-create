@@ -29,7 +29,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
     if (!message.imageUrl) return;
     const a = document.createElement("a");
     a.href = message.imageUrl;
-    a.download = `powerchat-image-${Date.now()}.png`;
+    a.download = `rockassistant-image-${Date.now()}.png`;
     a.click();
   };
 

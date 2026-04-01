@@ -26,7 +26,7 @@ function App() {
   return (
     <div className="app">
       <header>
-        <h1>🚀 Welcome to PowerChat Builder</h1>
+        <h1>🚀 Welcome to Rock Assistant Builder</h1>
         <p>Start building your next great project</p>
       </header>
 
@@ -136,7 +136,7 @@ export function debounce<T extends (...args: any[]) => void>(fn: T, delay: numbe
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PowerChat Builder</title>
+  <title>Rock Assistant Builder</title>
 </head>
 <body>
   <div id="root"></div>
@@ -267,7 +267,7 @@ const Builder = () => {
               <Sparkles size={14} className="text-primary" />
             </div>
             <div>
-              <span className="text-sm font-bold gradient-text">PowerChat Builder</span>
+              <span className="text-sm font-bold gradient-text">Rock Assistant Builder</span>
               <div className="flex items-center gap-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
                 <span className="text-[9px] text-muted-foreground">AI Online</span>

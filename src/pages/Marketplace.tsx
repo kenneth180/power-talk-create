@@ -22,9 +22,9 @@ interface AITool {
 
 const aiTools: AITool[] = [
   {
-    id: "powerchat",
-    name: "PowerChat AI",
-    description: "The default PowerChat assistant. Chat, get answers, code help, homework assistance, and more.",
+    id: "rockassistant",
+    name: "Rock Assistant AI",
+    description: "The default Rock Assistant. Chat, get answers, code help, homework assistance, and more.",
     image: "",
     category: "General",
     price: "free",
@@ -34,8 +34,8 @@ const aiTools: AITool[] = [
     color: "from-blue-500 to-indigo-600",
   },
   {
-    id: "powerchat-creative",
-    name: "PowerChat Creative",
+    id: "rockassistant-creative",
+    name: "Rock Assistant Creative",
     description: "Create stunning images, edit photos, and generate videos with AI-powered creative tools.",
     image: aiCreativeImg,
     category: "Creative",
@@ -199,7 +199,7 @@ export default function Marketplace() {
                     onClick={() => navigate("/")}
                     className="px-4 py-2 rounded-lg text-sm font-medium gradient-bg text-primary-foreground hover:opacity-90 transition-opacity"
                   >
-                    {tool.id === "powerchat" ? "Open" : "Try Now"}
+                    {tool.id === "rockassistant" ? "Open" : "Try Now"}
                   </button>
                 </div>
               </div>

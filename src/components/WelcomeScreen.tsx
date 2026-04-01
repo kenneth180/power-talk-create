@@ -29,10 +29,10 @@ export function WelcomeScreen({ onSuggestion }: WelcomeScreenProps) {
             <Zap size={28} className="text-primary-foreground" />
           </div>
           <h1 className="text-3xl md:text-4xl font-bold mb-2">
-            <span className="gradient-text">PowerChat</span>
+            <span className="gradient-text">Rock Assistant</span>
           </h1>
           <p className="text-muted-foreground text-sm mb-8">
-            Your AI assistant — chat, create images, generate videos, code, and more.
+            Your AI assistant — chat, create images, generate videos, code, and more. Powered by Replit and Google.
           </p>
         </motion.div>
 

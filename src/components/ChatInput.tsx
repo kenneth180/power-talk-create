@@ -59,7 +59,7 @@ export function ChatInput({ onSend, isLoading }: ChatInputProps) {
             onChange={(e) => setInput(e.target.value)}
             onInput={handleInput}
             onKeyDown={handleKeyDown}
-            placeholder="Ask PowerChat anything..."
+            placeholder="Ask Rock Assistant anything..."
             rows={1}
             className="flex-1 bg-transparent resize-none outline-none text-sm text-foreground placeholder:text-muted-foreground max-h-[200px]"
           />
@@ -80,7 +80,7 @@ export function ChatInput({ onSend, isLoading }: ChatInputProps) {
           </div>
         </div>
         <p className="text-[10px] text-muted-foreground text-center mt-2">
-          PowerChat can make mistakes. Consider verifying important information.
+          Rock Assistant can make mistakes. Consider verifying important information.
         </p>
       </div>
     </div>
