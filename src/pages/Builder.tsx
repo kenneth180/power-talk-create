@@ -26,7 +26,7 @@ function App() {
   return (
     <div className="app">
       <header>
-        <h1>🚀 Welcome to PowerChat Builder</h1>
+        <h1>🚀 Welcome to Rock Assistant Builder</h1>
         <p>Start building your next great project</p>
       </header>
 
