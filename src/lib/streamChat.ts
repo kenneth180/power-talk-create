@@ -2,6 +2,7 @@ type Msg = { role: "user" | "assistant"; content: string };
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 const IMAGE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-image`;
+const EDIT_IMAGE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/edit-image`;
 
 export async function streamChat({
   messages,
