@@ -376,7 +376,7 @@ const Index = () => {
           </div>
         )}
 
-        <ChatInput onSend={sendMessage} isLoading={isLoading} />
+        <ChatInput onSend={(msg, img) => sendMessage(msg, img)} isLoading={isLoading} />
       </div>
     </div>
   );
