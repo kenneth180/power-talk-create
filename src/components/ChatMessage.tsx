@@ -75,7 +75,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
                   </button>
                 </div>
               )}
-              <div className="prose prose-sm prose-invert max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
+              <div className="prose prose-base max-w-none text-foreground [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [&_p]:text-foreground [&_li]:text-foreground [&_h1]:text-foreground [&_h2]:text-foreground [&_h3]:text-foreground [&_strong]:text-foreground [&_code]:text-foreground text-[15px] leading-7">
                 <ReactMarkdown>{message.content}</ReactMarkdown>
               </div>
             </>
