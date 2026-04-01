@@ -22,9 +22,9 @@ interface AITool {
 
 const aiTools: AITool[] = [
   {
-    id: "powerchat",
-    name: "PowerChat AI",
-    description: "The default PowerChat assistant. Chat, get answers, code help, homework assistance, and more.",
+    id: "rockassistant",
+    name: "Rock Assistant AI",
+    description: "The default Rock Assistant. Chat, get answers, code help, homework assistance, and more.",
     image: "",
     category: "General",
     price: "free",
