@@ -7,7 +7,7 @@ import { ChatInput } from "@/components/ChatInput";
 import { TypingIndicator } from "@/components/TypingIndicator";
 import { WelcomeScreen } from "@/components/WelcomeScreen";
 import { AnimatePresence } from "framer-motion";
-import { streamChat, isImageRequest, generateImage } from "@/lib/streamChat";
+import { streamChat, isImageRequest, generateImage, editImage } from "@/lib/streamChat";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -119,7 +119,7 @@ const Index = () => {
   );
 
   const sendMessage = useCallback(
-    async (content: string) => {
+    async (content: string, imageBase64?: string) => {
       let chatId = activeChatId;
       if (!chatId) {
         chatId = await createNewChat(content);
@@ -157,8 +157,49 @@ const Index = () => {
       const currentMsgs = [...(messages[chatId!] || []), userMsg];
       const apiMessages = currentMsgs.map((m) => ({ role: m.role, content: m.content }));
 
-      // Check if this is an image generation request
-      if (isImageRequest(content)) {
+      // Check if user attached an image for editing
+      if (imageBase64) {
+        const assistantId = crypto.randomUUID();
+        setMessages((prev) => ({
+          ...prev,
+          [chatId!]: [
+            ...(prev[chatId!] || []),
+            { id: assistantId, role: "assistant" as const, content: "✏️ Editing your image...", timestamp: new Date() },
+          ],
+        }));
+        scrollToBottom();
+
+        await editImage({
+          prompt: content || "Enhance this image",
+          imageUrl: imageBase64,
+          onResult: async ({ imageUrl, text }) => {
+            setMessages((prev) => ({
+              ...prev,
+              [chatId!]: (prev[chatId!] || []).map((m) =>
+                m.id === assistantId ? { ...m, content: text, imageUrl } : m
+              ),
+            }));
+            setIsLoading(false);
+            if (user) {
+              await supabase.from("chat_messages").insert({
+                chat_id: chatId,
+                role: "assistant",
+                content: `[Image Edited] ${text}`,
+              });
+            }
+          },
+          onError: (error) => {
+            setMessages((prev) => ({
+              ...prev,
+              [chatId!]: (prev[chatId!] || []).map((m) =>
+                m.id === assistantId ? { ...m, content: `❌ ${error}` } : m
+              ),
+            }));
+            setIsLoading(false);
+            toast({ variant: "destructive", title: "Image Edit Error", description: error });
+          },
+        });
+      } else if (isImageRequest(content)) {
         const assistantId = crypto.randomUUID();
         setMessages((prev) => ({
           ...prev,
@@ -335,7 +376,7 @@ const Index = () => {
           </div>
         )}
 
-        <ChatInput onSend={sendMessage} isLoading={isLoading} />
+        <ChatInput onSend={(msg, img) => sendMessage(msg, img)} isLoading={isLoading} />
       </div>
     </div>
   );
