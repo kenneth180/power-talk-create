@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import { Zap, Image, Video, Mic, Code, BookOpen, Phone, Hammer } from "lucide-react";
+import { Image, Video, Mic, Code, BookOpen, Phone, Hammer } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import logoImg from "/logo.png";
 
 interface WelcomeScreenProps {
   onSuggestion: (text: string) => void;
