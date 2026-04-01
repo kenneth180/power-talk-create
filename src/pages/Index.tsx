@@ -7,7 +7,7 @@ import { ChatInput } from "@/components/ChatInput";
 import { TypingIndicator } from "@/components/TypingIndicator";
 import { WelcomeScreen } from "@/components/WelcomeScreen";
 import { AnimatePresence } from "framer-motion";
-import { streamChat, isImageRequest, generateImage } from "@/lib/streamChat";
+import { streamChat, isImageRequest, generateImage, editImage } from "@/lib/streamChat";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
