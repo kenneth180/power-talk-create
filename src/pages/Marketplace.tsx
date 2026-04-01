@@ -199,7 +199,7 @@ export default function Marketplace() {
                     onClick={() => navigate("/")}
                     className="px-4 py-2 rounded-lg text-sm font-medium gradient-bg text-primary-foreground hover:opacity-90 transition-opacity"
                   >
-                    {tool.id === "powerchat" ? "Open" : "Try Now"}
+                    {tool.id === "rockassistant" ? "Open" : "Try Now"}
                   </button>
                 </div>
               </div>

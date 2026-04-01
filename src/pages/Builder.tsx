@@ -267,7 +267,7 @@ const Builder = () => {
               <Sparkles size={14} className="text-primary" />
             </div>
             <div>
-              <span className="text-sm font-bold gradient-text">PowerChat Builder</span>
+              <span className="text-sm font-bold gradient-text">Rock Assistant Builder</span>
               <div className="flex items-center gap-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
                 <span className="text-[9px] text-muted-foreground">AI Online</span>
