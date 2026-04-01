@@ -135,3 +135,41 @@ export async function generateImage({
     onError(e instanceof Error ? e.message : "Image generation failed");
   }
 }
+
+export async function editImage({
+  prompt,
+  imageUrl,
+  onResult,
+  onError,
+}: {
+  prompt: string;
+  imageUrl: string;
+  onResult: (data: { imageUrl: string; text: string }) => void;
+  onError: (error: string) => void;
+}) {
+  try {
+    const resp = await fetch(EDIT_IMAGE_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+      },
+      body: JSON.stringify({ prompt: prompt || "Enhance this image", imageUrl }),
+    });
+
+    if (!resp.ok) {
+      const data = await resp.json().catch(() => ({ error: "Image editing failed" }));
+      onError(data.error || `Error ${resp.status}`);
+      return;
+    }
+
+    const data = await resp.json();
+    if (!data.imageUrl) {
+      onError("No edited image was returned. Please try again.");
+      return;
+    }
+    onResult(data);
+  } catch (e) {
+    onError(e instanceof Error ? e.message : "Image editing failed");
+  }
+}
