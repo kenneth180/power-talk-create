@@ -26,8 +26,8 @@ export function WelcomeScreen({ onSuggestion }: WelcomeScreenProps) {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl gradient-bg glow-primary mb-6">
-            <Zap size={28} className="text-primary-foreground" />
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6">
+            <img src={logoImg} alt="Rock Assistant" width={64} height={64} />
           </div>
           <h1 className="text-3xl md:text-4xl font-bold mb-2">
             <span className="gradient-text">Rock Assistant</span>
