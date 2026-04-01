@@ -34,7 +34,7 @@ serve(async (req) => {
         messages: [
           {
             role: "user",
-            content: `Generate a high-quality image: ${prompt}. Make it 680x170 pixels, clean and professional.`,
+            content: `Generate a high-quality image: ${prompt}. Make it exactly 1000x900 pixels resolution, large and detailed.`,
           },
         ],
         modalities: ["image", "text"],
