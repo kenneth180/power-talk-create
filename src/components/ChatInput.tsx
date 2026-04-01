@@ -80,7 +80,7 @@ export function ChatInput({ onSend, isLoading }: ChatInputProps) {
           </div>
         </div>
         <p className="text-[10px] text-muted-foreground text-center mt-2">
-          PowerChat can make mistakes. Consider verifying important information.
+          Rock Assistant can make mistakes. Consider verifying important information.
         </p>
       </div>
     </div>

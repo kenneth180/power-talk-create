@@ -32,7 +32,7 @@ export function WelcomeScreen({ onSuggestion }: WelcomeScreenProps) {
             <span className="gradient-text">Rock Assistant</span>
           </h1>
           <p className="text-muted-foreground text-sm mb-8">
-            Your AI assistant — chat, create images, generate videos, code, and more.
+            Your AI assistant — chat, create images, generate videos, code, and more. Powered by Replit and Google.
           </p>
         </motion.div>
 

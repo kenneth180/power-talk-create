@@ -64,7 +64,7 @@ export function ChatSidebar({
       >
         {/* Header */}
         <div className="p-4 flex items-center justify-between border-b border-sidebar-border">
-          <h2 className="text-lg font-semibold gradient-text">PowerChat</h2>
+          <h2 className="text-lg font-semibold gradient-text">Rock Assistant</h2>
           <button onClick={onClose} className="md:hidden p-1 rounded-md hover:bg-sidebar-accent text-sidebar-foreground">
             <X size={18} />
           </button>
