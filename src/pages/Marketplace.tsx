@@ -34,8 +34,8 @@ const aiTools: AITool[] = [
     color: "from-blue-500 to-indigo-600",
   },
   {
-    id: "powerchat-creative",
-    name: "PowerChat Creative",
+    id: "rockassistant-creative",
+    name: "Rock Assistant Creative",
     description: "Create stunning images, edit photos, and generate videos with AI-powered creative tools.",
     image: aiCreativeImg,
     category: "Creative",
