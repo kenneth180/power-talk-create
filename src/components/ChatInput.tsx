@@ -59,7 +59,7 @@ export function ChatInput({ onSend, isLoading }: ChatInputProps) {
             onChange={(e) => setInput(e.target.value)}
             onInput={handleInput}
             onKeyDown={handleKeyDown}
-            placeholder="Ask PowerChat anything..."
+            placeholder="Ask Rock Assistant anything..."
             rows={1}
             className="flex-1 bg-transparent resize-none outline-none text-sm text-foreground placeholder:text-muted-foreground max-h-[200px]"
           />
