@@ -20,6 +20,8 @@ interface ChatSidebarProps {
   onDeleteChat: (id: string) => void;
   isOpen: boolean;
   onClose: () => void;
+  isPro: boolean;
+  onActivateCoupon: () => void;
 }
 
 export function ChatSidebar({
