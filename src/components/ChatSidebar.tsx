@@ -1,4 +1,5 @@
-import { MessageSquare, Plus, Crown, Trash2, X, Store, LogIn, LogOut } from "lucide-react";
+import { useState } from "react";
+import { MessageSquare, Plus, Crown, Trash2, X, Store, LogIn, LogOut, Gift, Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
