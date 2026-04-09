@@ -319,6 +319,11 @@ const Index = () => {
         onDeleteChat={handleDeleteChat}
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
+        isPro={isPro}
+        onActivateCoupon={() => {
+          setIsPro(true);
+          localStorage.setItem("rock-pro", "true");
+        }}
       />
 
       <div className="flex-1 flex flex-col min-w-0">
