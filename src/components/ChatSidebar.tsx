@@ -24,6 +24,9 @@ interface ChatSidebarProps {
   onActivateCoupon: () => void;
 }
 
+const STRIPE_LINK = "https://buy.stripe.com/test_28EfZhfu0cVQedUeg9eUU0c";
+const FREE_COUPON = "rock-copon-free";
+
 export function ChatSidebar({
   chats,
   activeChatId,
@@ -32,10 +35,14 @@ export function ChatSidebar({
   onDeleteChat,
   isOpen,
   onClose,
+  isPro,
+  onActivateCoupon,
 }: ChatSidebarProps) {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
-
+  const [showCoupon, setShowCoupon] = useState(false);
+  const [couponCode, setCouponCode] = useState("");
+  const [couponError, setCouponError] = useState("");
   const handleGoogleSignIn = async () => {
     const { error } = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: window.location.origin,
