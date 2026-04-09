@@ -390,6 +390,15 @@ const Index = () => {
 
         <ChatInput onSend={(msg, img) => sendMessage(msg, img)} isLoading={isLoading} />
       </div>
+
+      <UpgradeModal
+        isOpen={showUpgrade}
+        onClose={() => setShowUpgrade(false)}
+        onActivateCoupon={() => {
+          setIsPro(true);
+          localStorage.setItem("rock-pro", "true");
+        }}
+      />
     </div>
   );
 };
