@@ -7,6 +7,7 @@ import { ChatInput } from "@/components/ChatInput";
 import { TypingIndicator } from "@/components/TypingIndicator";
 import { WelcomeScreen } from "@/components/WelcomeScreen";
 import { AnimatePresence } from "framer-motion";
+import { UpgradeModal } from "@/components/UpgradeModal";
 import { streamChat, isImageRequest, generateImage, editImage } from "@/lib/streamChat";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -19,6 +20,8 @@ const Index = () => {
   const [messages, setMessages] = useState<Record<string, Message[]>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isPro, setIsPro] = useState(() => localStorage.getItem("rock-pro") === "true");
+  const [showUpgrade, setShowUpgrade] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -324,11 +327,20 @@ const Index = () => {
             <Menu size={20} />
           </button>
           <h1 className="text-sm font-semibold gradient-text">Rock Assistant</h1>
-          <span className="text-[10px] text-muted-foreground">Gemini 3 Flash</span>
+          <span className="text-[10px] text-muted-foreground">{isPro ? "Rock 6 Pro" : "Rock 5 Pro"}</span>
           <div className="ml-auto flex items-center gap-3">
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-secondary text-muted-foreground border border-border">
-              Free
-            </span>
+            {isPro ? (
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r from-yellow-500/20 to-orange-500/20 text-yellow-400 border border-yellow-500/30 font-medium">
+                Pro
+              </span>
+            ) : (
+              <button
+                onClick={() => setShowUpgrade(true)}
+                className="text-[10px] px-2 py-0.5 rounded-full bg-secondary text-muted-foreground border border-border hover:border-yellow-500/50 hover:text-yellow-400 transition-colors"
+              >
+                Free · Upgrade
+              </button>
+            )}
             {user ? (
               <div className="flex items-center gap-2">
                 {user.user_metadata?.avatar_url ? (
@@ -378,6 +390,15 @@ const Index = () => {
 
         <ChatInput onSend={(msg, img) => sendMessage(msg, img)} isLoading={isLoading} />
       </div>
+
+      <UpgradeModal
+        isOpen={showUpgrade}
+        onClose={() => setShowUpgrade(false)}
+        onActivateCoupon={() => {
+          setIsPro(true);
+          localStorage.setItem("rock-pro", "true");
+        }}
+      />
     </div>
   );
 };
