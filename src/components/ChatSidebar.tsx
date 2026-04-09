@@ -165,18 +165,69 @@ export function ChatSidebar({
         )}
 
         {/* Pro Upgrade */}
-        <div className="p-3 border-t border-sidebar-border">
-          <div className="p-3 rounded-lg bg-sidebar-accent">
-            <div className="flex items-center gap-2 mb-1">
-              <Crown size={14} style={{ color: "hsl(45, 100%, 55%)" }} />
-              <span className="text-sm font-semibold text-foreground">Upgrade to Pro</span>
-            </div>
-            <p className="text-xs text-muted-foreground mb-2">
-              Longer videos, more images & unlimited access
-            </p>
-            <div className="text-lg font-bold text-foreground">$20<span className="text-xs font-normal text-muted-foreground">/mo</span></div>
+        {!isPro ? (
+          <div className="p-3 border-t border-sidebar-border space-y-2">
+            <a
+              href={STRIPE_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity"
+            >
+              <Zap size={16} />
+              Upgrade to Rock 6 Pro — $20/mo
+            </a>
+            {!showCoupon ? (
+              <button
+                onClick={() => setShowCoupon(true)}
+                className="w-full flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <Gift size={12} />
+                Have a coupon?
+              </button>
+            ) : (
+              <div className="space-y-1.5">
+                <div className="flex gap-1.5">
+                  <input
+                    value={couponCode}
+                    onChange={(e) => { setCouponCode(e.target.value); setCouponError(""); }}
+                    placeholder="Coupon code"
+                    className="flex-1 px-2.5 py-1.5 rounded-lg bg-secondary border border-border text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        if (couponCode.trim().toLowerCase() === FREE_COUPON) {
+                          onActivateCoupon();
+                        } else {
+                          setCouponError("Invalid coupon");
+                        }
+                      }
+                    }}
+                  />
+                  <button
+                    onClick={() => {
+                      if (couponCode.trim().toLowerCase() === FREE_COUPON) {
+                        onActivateCoupon();
+                      } else {
+                        setCouponError("Invalid coupon");
+                      }
+                    }}
+                    className="px-3 py-1.5 rounded-lg gradient-bg text-primary-foreground text-xs font-medium hover:opacity-90 transition-opacity"
+                  >
+                    Apply
+                  </button>
+                </div>
+                {couponError && <p className="text-[10px] text-destructive text-center">{couponError}</p>}
+              </div>
+            )}
           </div>
-        </div>
+        ) : (
+          <div className="p-3 border-t border-sidebar-border">
+            <div className="flex items-center gap-2 px-2">
+              <Crown size={14} className="text-yellow-400" />
+              <span className="text-xs font-semibold text-foreground">Rock 6 Pro</span>
+              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-gradient-to-r from-yellow-500/20 to-orange-500/20 text-yellow-400 border border-yellow-500/30">Active</span>
+            </div>
+          </div>
+        )}
 
         <div className="px-4 py-3 text-[10px] text-muted-foreground text-center border-t border-sidebar-border">
           Powered by Replit & Google
