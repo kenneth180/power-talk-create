@@ -74,7 +74,7 @@ export function ChatSidebar({
       >
         {/* Header */}
         <div className="p-4 flex items-center justify-between border-b border-sidebar-border">
-          <h2 className="text-lg font-semibold gradient-text">Rock Assistant</h2>
+          <h2 className="text-lg font-semibold gradient-text whitespace-pre-wrap">Rock Assistant your ai helper  start a new chat{"\n"}</h2>
           <button onClick={onClose} className="md:hidden p-1 rounded-md hover:bg-sidebar-accent text-sidebar-foreground">
             <X size={18} />
           </button>
@@ -103,7 +103,7 @@ export function ChatSidebar({
           {!user ? (
             <div className="flex flex-col items-center justify-center mt-12 px-4 text-center space-y-4">
               <p className="text-muted-foreground text-xs">
-                Sign in to save your conversations
+                Sign in to save your conversations{" "}
               </p>
               <button
                 onClick={handleGoogleSignIn}
@@ -230,7 +230,7 @@ export function ChatSidebar({
         )}
 
         <div className="px-4 py-3 text-[10px] text-muted-foreground text-center border-t border-sidebar-border">
-          Powered by Replit & Google
+          Powered by redtonw & Google
         </div>
       </motion.aside>
     </>
