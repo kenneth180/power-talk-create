@@ -167,9 +167,9 @@ const Index = () => {
       // Check if user attached an image for editing
       if (imageBase64) {
         // Only Pro users can edit images
-        if (!isPro) {
+        if (!canEditImage(currentPlan)) {
           setIsLoading(false);
-          toast({ variant: "destructive", title: "Pro Feature", description: "Image editing is only available with Rock 6 Pro. Upgrade to edit images!" });
+          toast({ variant: "destructive", title: "Pro Feature", description: "Image editing requires a paid plan. Upgrade to edit images!" });
           return;
         }
         const assistantId = crypto.randomUUID();
@@ -332,6 +332,8 @@ const Index = () => {
         onClose={() => setSidebarOpen(false)}
         isPro={isPro}
         onActivateCoupon={() => {
+          setPlan("pro");
+          setCurrentPlan("pro");
           navigate("/you-buy-the-rock-6-assistant-perchose-susceful");
         }}
       />
@@ -342,7 +344,7 @@ const Index = () => {
             <Menu size={35} className="w-[35px] h-[35px] text-base font-serif" />
           </button>
           <h1 className="text-sm font-semibold gradient-text">Rock Assistant</h1>
-          <span className="text-[10px] text-muted-foreground">{isPro ? "Rock 6 Pro" : "Rock 5 Pro upgrade for a better ai "}</span>
+          <span className="text-[10px] text-muted-foreground">{isPro ? planLabel(currentPlan) : "Rock 5 Pro upgrade for a better ai "}</span>
           <div className="ml-auto flex items-center gap-3">
             {isPro ? (
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r from-yellow-500/20 to-orange-500/20 text-yellow-400 border border-yellow-500/30 font-medium">
