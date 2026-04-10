@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { Menu, LogIn, LogOut } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { lovable } from "@/integrations/lovable/index";
 import { ChatSidebar, ChatItem } from "@/components/ChatSidebar";
 import { ChatMessage, Message } from "@/components/ChatMessage";
@@ -14,6 +15,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
+  const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const [chats, setChats] = useState<ChatItem[]>([]);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
