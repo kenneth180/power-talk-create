@@ -323,8 +323,7 @@ const Index = () => {
         onClose={() => setSidebarOpen(false)}
         isPro={isPro}
         onActivateCoupon={() => {
-          setIsPro(true);
-          localStorage.setItem("rock-pro", "true");
+          navigate("/you-buy-the-rock-6-assistant-perchose-susceful");
         }}
       />
 
@@ -402,8 +401,7 @@ const Index = () => {
         isOpen={showUpgrade}
         onClose={() => setShowUpgrade(false)}
         onActivateCoupon={() => {
-          setIsPro(true);
-          localStorage.setItem("rock-pro", "true");
+          navigate("/you-buy-the-rock-6-assistant-perchose-susceful");
         }}
       />
     </div>
