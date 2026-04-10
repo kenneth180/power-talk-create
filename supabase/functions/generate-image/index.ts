@@ -12,7 +12,8 @@ serve(async (req) => {
   }
 
   try {
-    const { prompt } = await req.json();
+    const { prompt, isPro } = await req.json();
+    const maxSize = isPro ? "1250x1500" : "1000x1000";
     if (!prompt) {
       return new Response(
         JSON.stringify({ error: "No prompt provided" }),
@@ -34,7 +35,7 @@ serve(async (req) => {
         messages: [
           {
             role: "user",
-            content: `Generate a high-quality image: ${prompt}. Make it exactly 1000x900 pixels resolution, large and detailed.`,
+            content: `Generate a high-quality image: ${prompt}. Make it exactly ${maxSize} pixels resolution, large and detailed.`,
           },
         ],
         modalities: ["image", "text"],

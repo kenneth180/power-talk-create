@@ -9,7 +9,14 @@ const plans = [
     name: "Rock 5 Pro",
     price: "Free",
     current: true,
-    features: ["Basic AI chat", "Standard response speed", "Image generation", "Chat history"],
+    features: [
+      "Basic AI chat",
+      "Image generation — max 1000×1000",
+      "Video generation — max 30 seconds",
+      "Code generation — max 1000 lines per file",
+      "No image editing",
+      "Chat history",
+    ],
   },
   {
     name: "Rock 6 Pro",
@@ -17,8 +24,11 @@ const plans = [
     highlight: true,
     features: [
       "Rock 6 Pro model — faster & smarter",
+      "Image generation — up to 1250×1500",
+      "Video generation — up to 5 minutes",
+      "Code generation — 1000 to 10000 lines per file",
+      "Image editing included",
       "Priority response speed",
-      "HD image generation",
       "Unlimited chat history",
       "Early access to new features",
     ],
