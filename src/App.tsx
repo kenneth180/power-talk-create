@@ -7,6 +7,8 @@ import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import Marketplace from "./pages/Marketplace";
 import Builder from "./pages/Builder";
+import PurchaseSuccess from "./pages/PurchaseSuccess";
+import PlansBuy from "./pages/PlansBuy";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +24,8 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/marketplace" element={<Marketplace />} />
             <Route path="/builder" element={<Builder />} />
+            <Route path="/you-buy-the-rock-6-assistant-perchose-susceful" element={<PurchaseSuccess />} />
+            <Route path="/plans-buy" element={<PlansBuy />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

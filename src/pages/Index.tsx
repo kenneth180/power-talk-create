@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { Menu, LogIn, LogOut } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { lovable } from "@/integrations/lovable/index";
 import { ChatSidebar, ChatItem } from "@/components/ChatSidebar";
 import { ChatMessage, Message } from "@/components/ChatMessage";
@@ -14,6 +15,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
+  const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const [chats, setChats] = useState<ChatItem[]>([]);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
@@ -321,8 +323,7 @@ const Index = () => {
         onClose={() => setSidebarOpen(false)}
         isPro={isPro}
         onActivateCoupon={() => {
-          setIsPro(true);
-          localStorage.setItem("rock-pro", "true");
+          navigate("/you-buy-the-rock-6-assistant-perchose-susceful");
         }}
       />
 
@@ -400,8 +401,7 @@ const Index = () => {
         isOpen={showUpgrade}
         onClose={() => setShowUpgrade(false)}
         onActivateCoupon={() => {
-          setIsPro(true);
-          localStorage.setItem("rock-pro", "true");
+          navigate("/you-buy-the-rock-6-assistant-perchose-susceful");
         }}
       />
     </div>
