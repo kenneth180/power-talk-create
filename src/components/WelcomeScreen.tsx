@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Image, Video, Mic, Code, BookOpen, Phone, Hammer } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import logoImg from "/logo.png";
+import logoImg from "/new-logo.jpg";
 
 interface WelcomeScreenProps {
   onSuggestion: (text: string) => void;
@@ -12,8 +12,8 @@ const suggestions = [
   { icon: Code, text: "Write a Python script to sort a list", color: "text-green-400" },
   { icon: BookOpen, text: "Help me with my math homework", color: "text-yellow-400" },
   { icon: Video, text: "Create a short video about space", color: "text-purple-400" },
-  { icon: Mic, text: "Start a voice conversation", color: "text-blue-400" },
-  { icon: Phone, text: "Call Mom", color: "text-orange-400" },
+  { icon: Mic, text: "Start a voice conversation soon", color: "text-blue-400" },
+  { icon: Phone, text: "​send a  call coming soon", color: "text-orange-400" },
 ];
 
 export function WelcomeScreen({ onSuggestion }: WelcomeScreenProps) {
@@ -30,10 +30,10 @@ export function WelcomeScreen({ onSuggestion }: WelcomeScreenProps) {
             <img src={logoImg} alt="Rock Assistant" width={64} height={64} />
           </div>
           <h1 className="text-3xl md:text-4xl font-bold mb-2">
-            <span className="gradient-text">Rock Assistant</span>
+            <span className="gradient-text">Rock Assistant your helper</span>
           </h1>
           <p className="text-muted-foreground text-sm mb-8">
-            Your AI assistant — chat, create images, generate videos, code, and more. Powered by Replit and Google.
+            Your AI assistant — chat, create images, generate videos, code, and more. Powered by redtown 2  and Google 
           </p>
         </motion.div>
 

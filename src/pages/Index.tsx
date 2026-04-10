@@ -330,10 +330,10 @@ const Index = () => {
       <div className="flex-1 flex flex-col min-w-0">
         <header className="h-14 border-b border-border flex items-center px-4 gap-3 bg-background shrink-0">
           <button onClick={() => setSidebarOpen(true)} className="p-2 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors">
-            <Menu size={20} />
+            <Menu size={35} className="w-[35px] h-[35px] text-base font-serif" />
           </button>
           <h1 className="text-sm font-semibold gradient-text">Rock Assistant</h1>
-          <span className="text-[10px] text-muted-foreground">{isPro ? "Rock 6 Pro" : "Rock 5 Pro"}</span>
+          <span className="text-[10px] text-muted-foreground">{isPro ? "Rock 6 Pro" : "Rock 5 Pro upgrade for a better ai "}</span>
           <div className="ml-auto flex items-center gap-3">
             {isPro ? (
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r from-yellow-500/20 to-orange-500/20 text-yellow-400 border border-yellow-500/30 font-medium">
@@ -344,7 +344,7 @@ const Index = () => {
                 onClick={() => setShowUpgrade(true)}
                 className="text-[10px] px-2 py-0.5 rounded-full bg-secondary text-muted-foreground border border-border hover:border-yellow-500/50 hover:text-yellow-400 transition-colors"
               >
-                Free · Upgrade
+                Free plan upgrade for better ai
               </button>
             )}
             {user ? (
