@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Crown, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
+import { setPlan, planLabel, PlanTier } from "@/lib/plans";
 
 export default function PurchaseSuccess() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const tier = (searchParams.get("plan") as PlanTier) || "pro";
   const [countdown, setCountdown] = useState(5);
 
   useEffect(() => {
-    localStorage.setItem("rock-pro", "true");
-  }, []);
+    setPlan(tier);
+  }, [tier]);
 
   useEffect(() => {
     if (countdown <= 0) {
@@ -39,7 +42,7 @@ export default function PurchaseSuccess() {
         <div className="space-y-2">
           <div className="flex items-center justify-center gap-2">
             <Crown size={20} className="text-yellow-400" />
-            <h1 className="text-2xl font-bold text-foreground">You bought Rock 6 Pro!</h1>
+            <h1 className="text-2xl font-bold text-foreground">You bought {planLabel(tier)}!</h1>
           </div>
           <p className="text-muted-foreground text-sm">
             Purchase successful. Enjoy faster, smarter AI responses.
