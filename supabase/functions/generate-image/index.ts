@@ -14,6 +14,7 @@ serve(async (req) => {
   try {
     const { prompt, isPro } = await req.json();
     const maxSize = isPro ? "1250x1500" : "1000x1000";
+    if (!prompt) {
       return new Response(
         JSON.stringify({ error: "No prompt provided" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
