@@ -102,10 +102,12 @@ export function isImageRequest(text: string): boolean {
 
 export async function generateImage({
   prompt,
+  isPro,
   onResult,
   onError,
 }: {
   prompt: string;
+  isPro?: boolean;
   onResult: (data: { imageUrl: string; text: string }) => void;
   onError: (error: string) => void;
 }) {
@@ -116,7 +118,7 @@ export async function generateImage({
         "Content-Type": "application/json",
         Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
-      body: JSON.stringify({ prompt }),
+      body: JSON.stringify({ prompt, isPro: !!isPro }),
     });
 
     if (!resp.ok) {
