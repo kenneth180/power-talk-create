@@ -226,6 +226,7 @@ const Index = () => {
         await generateImage({
           prompt: content,
           isPro,
+          plan: currentPlan,
           onResult: async ({ imageUrl, text }) => {
             setMessages((prev) => ({
               ...prev,
