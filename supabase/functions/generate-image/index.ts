@@ -6,14 +6,23 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+const SIZE_MAP: Record<string, string> = {
+  free: "1000x1000",
+  pro: "1250x1500",
+  ultra: "1550x1300",
+  team: "1750x1650",
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { prompt, isPro } = await req.json();
-    const maxSize = isPro ? "1250x1500" : "1000x1000";
+    const { prompt, isPro, plan } = await req.json();
+    const tier = plan || (isPro ? "pro" : "free");
+    const maxSize = SIZE_MAP[tier] || "1000x1000";
+
     if (!prompt) {
       return new Response(
         JSON.stringify({ error: "No prompt provided" }),
