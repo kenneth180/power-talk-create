@@ -12,6 +12,7 @@ import { UpgradeModal } from "@/components/UpgradeModal";
 import { streamChat, isImageRequest, generateImage, editImage } from "@/lib/streamChat";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { getPlan, setPlan, isPaidPlan, planLabel, canEditImage, PlanTier } from "@/lib/plans";
 import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
@@ -22,7 +23,8 @@ const Index = () => {
   const [messages, setMessages] = useState<Record<string, Message[]>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isPro, setIsPro] = useState(() => localStorage.getItem("rock-pro") === "true");
+  const [currentPlan, setCurrentPlan] = useState(() => getPlan());
+  const isPro = isPaidPlan(currentPlan);
   const [showUpgrade, setShowUpgrade] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
