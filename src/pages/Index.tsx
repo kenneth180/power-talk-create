@@ -164,6 +164,12 @@ const Index = () => {
 
       // Check if user attached an image for editing
       if (imageBase64) {
+        // Only Pro users can edit images
+        if (!isPro) {
+          setIsLoading(false);
+          toast({ variant: "destructive", title: "Pro Feature", description: "Image editing is only available with Rock 6 Pro. Upgrade to edit images!" });
+          return;
+        }
         const assistantId = crypto.randomUUID();
         setMessages((prev) => ({
           ...prev,
