@@ -223,7 +223,7 @@ export function ChatSidebar({
           <div className="p-3 border-t border-sidebar-border">
             <div className="flex items-center gap-2 px-2">
               <Crown size={14} className="text-yellow-400" />
-              <span className="text-xs font-semibold text-foreground">Rock 6 Pro</span>
+              <span className="text-xs font-semibold text-foreground">{isPro ? "Pro Plan" : "Rock 5 Pro"}</span>
               <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-gradient-to-r from-yellow-500/20 to-orange-500/20 text-yellow-400 border border-yellow-500/30">Active</span>
             </div>
           </div>
