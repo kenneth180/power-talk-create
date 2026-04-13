@@ -212,7 +212,7 @@ const Index = () => {
             toast({ variant: "destructive", title: "Image Edit Error", description: error });
           },
         });
-      } else if (isImageRequest(content)) {
+      } else if (isImageRequest(content) && !extractWebUrl(content)) {
         const assistantId = crypto.randomUUID();
         setMessages((prev) => ({
           ...prev,
