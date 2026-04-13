@@ -9,7 +9,7 @@ import { TypingIndicator } from "@/components/TypingIndicator";
 import { WelcomeScreen } from "@/components/WelcomeScreen";
 import { AnimatePresence } from "framer-motion";
 import { UpgradeModal } from "@/components/UpgradeModal";
-import { streamChat, isImageRequest, generateImage, editImage } from "@/lib/streamChat";
+import { streamChat, isImageRequest, generateImage, editImage, extractWebUrl } from "@/lib/streamChat";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { getPlan, setPlan, isPaidPlan, planLabel, canEditImage, PlanTier } from "@/lib/plans";
