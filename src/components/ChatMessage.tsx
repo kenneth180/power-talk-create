@@ -19,6 +19,7 @@ interface ChatMessageProps {
 
 export function ChatMessage({ message }: ChatMessageProps) {
   const [copied, setCopied] = useState(false);
+  const [showWebPreview, setShowWebPreview] = useState(!!message.webUrl);
   const isUser = message.role === "user";
 
   const handleCopy = () => {
