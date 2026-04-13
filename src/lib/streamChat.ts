@@ -100,6 +100,23 @@ export function isImageRequest(text: string): boolean {
   return IMAGE_PATTERNS.some((re) => re.test(text));
 }
 
+const URL_PATTERNS = [
+  /\b(?:go\s+to|open|visit|show\s+me|navigate\s+to|browse)\s+(https?:\/\/[^\s]+)/i,
+  /\b(?:go\s+to|open|visit|show\s+me|navigate\s+to|browse)\s+([a-z0-9][-a-z0-9]*(?:\.[a-z]{2,})+(?:\/[^\s]*)?)/i,
+];
+
+export function extractWebUrl(text: string): string | null {
+  for (const re of URL_PATTERNS) {
+    const match = text.match(re);
+    if (match?.[1]) {
+      let url = match[1];
+      if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+      return url;
+    }
+  }
+  return null;
+}
+
 export async function generateImage({
   prompt,
   isPro,
