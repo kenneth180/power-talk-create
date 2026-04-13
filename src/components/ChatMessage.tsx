@@ -1,7 +1,8 @@
 import ReactMarkdown from "react-markdown";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Bot, User, Copy, Check, Download } from "lucide-react";
 import { useState } from "react";
+import { WebPreview } from "./WebPreview";
 
 export interface Message {
   id: string;
@@ -9,6 +10,7 @@ export interface Message {
   content: string;
   timestamp: Date;
   imageUrl?: string;
+  webUrl?: string;
 }
 
 interface ChatMessageProps {
