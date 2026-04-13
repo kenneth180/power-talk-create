@@ -11,6 +11,15 @@ const STRIPE_LINKS: Record<string, string> = {
   team: "https://buy.stripe.com/test_fZucN54Pm2hcd9Qeg9eUU0e",
 };
 
+const sharedFeatures = [
+  "AI computes — powered by AI",
+  "Access to Google.com",
+  "Buy apps from Play Store",
+  "Screen sharing",
+  "AI can enter any website",
+  "Create with Replit or Lovable",
+];
+
 const plans = [
   {
     key: "free" as PlanTier,
@@ -23,6 +32,7 @@ const plans = [
       "Code generation — max 1000 lines per file",
       "No image editing",
       "Chat history",
+      ...sharedFeatures,
     ],
   },
   {
@@ -39,6 +49,7 @@ const plans = [
       "Priority response speed",
       "Unlimited chat history",
       "Early access to new features",
+      ...sharedFeatures,
     ],
   },
   {
@@ -55,6 +66,7 @@ const plans = [
       "Priority response speed",
       "Unlimited chat history",
       "Early access to new features",
+      ...sharedFeatures,
     ],
   },
   {
@@ -71,6 +83,7 @@ const plans = [
       "Collaboration & shared workspaces",
       "Priority response speed",
       "Unlimited chat history",
+      ...sharedFeatures,
     ],
   },
 ];
