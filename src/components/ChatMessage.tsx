@@ -1,7 +1,8 @@
 import ReactMarkdown from "react-markdown";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Bot, User, Copy, Check, Download } from "lucide-react";
 import { useState } from "react";
+import { WebPreview } from "./WebPreview";
 
 export interface Message {
   id: string;
@@ -9,6 +10,7 @@ export interface Message {
   content: string;
   timestamp: Date;
   imageUrl?: string;
+  webUrl?: string;
 }
 
 interface ChatMessageProps {
@@ -17,6 +19,7 @@ interface ChatMessageProps {
 
 export function ChatMessage({ message }: ChatMessageProps) {
   const [copied, setCopied] = useState(false);
+  const [showWebPreview, setShowWebPreview] = useState(!!message.webUrl);
   const isUser = message.role === "user";
 
   const handleCopy = () => {
@@ -78,6 +81,12 @@ export function ChatMessage({ message }: ChatMessageProps) {
               <div className="prose prose-base max-w-none text-foreground [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [&_p]:text-foreground [&_li]:text-foreground [&_h1]:text-foreground [&_h2]:text-foreground [&_h3]:text-foreground [&_strong]:text-foreground [&_code]:text-foreground text-[15px] leading-7">
                 <ReactMarkdown>{message.content}</ReactMarkdown>
               </div>
+              {/* Web Preview */}
+              <AnimatePresence>
+                {message.webUrl && showWebPreview && (
+                  <WebPreview url={message.webUrl} onClose={() => setShowWebPreview(false)} />
+                )}
+              </AnimatePresence>
             </>
           )}
         </div>
