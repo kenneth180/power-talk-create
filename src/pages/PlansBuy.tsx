@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Crown, Zap, ArrowLeft, Check, Clock } from "lucide-react";
+import { Crown, Zap, ArrowLeft, Check, Gift } from "lucide-react";
 import { motion } from "framer-motion";
-import { getPlan, PlanTier } from "@/lib/plans";
+import { getPlan, setPlan, PlanTier, FREE_COUPON } from "@/lib/plans";
+import { toast } from "@/hooks/use-toast";
 
 const STRIPE_LINKS: Record<string, string> = {
   pro: "https://buy.stripe.com/test_28EfZhfu0cVQedUeg9eUU0c",
@@ -75,7 +77,23 @@ const plans = [
 
 export default function PlansBuy() {
   const navigate = useNavigate();
-  const currentPlan = getPlan();
+  const [currentPlan, setCurrentPlan] = useState<PlanTier>(getPlan());
+  const [couponOpen, setCouponOpen] = useState<string | null>(null);
+  const [couponCode, setCouponCode] = useState("");
+  const [couponError, setCouponError] = useState("");
+
+  const handleCoupon = (planKey: PlanTier) => {
+    if (couponCode.trim().toLowerCase() === FREE_COUPON) {
+      setPlan(planKey);
+      setCurrentPlan(planKey);
+      setCouponOpen(null);
+      setCouponCode("");
+      setCouponError("");
+      toast({ title: `${plans.find(p => p.key === planKey)?.name} Activated!`, description: "Your plan has been upgraded via coupon." });
+    } else {
+      setCouponError("Invalid coupon code");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
@@ -127,14 +145,44 @@ export default function PlansBuy() {
                     Current Plan
                   </div>
                 ) : (
-                  <a
-                    href={STRIPE_LINKS[plan.key]}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity"
-                  >
-                    <Zap size={14} /> Upgrade Now
-                  </a>
+                  <div className="space-y-2">
+                    <a
+                      href={STRIPE_LINKS[plan.key]}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-semibold text-sm hover:opacity-90 transition-opacity"
+                    >
+                      <Zap size={14} /> Upgrade Now
+                    </a>
+                    {couponOpen === plan.key ? (
+                      <div className="space-y-1.5">
+                        <div className="flex gap-1.5">
+                          <input
+                            value={couponCode}
+                            onChange={(e) => { setCouponCode(e.target.value); setCouponError(""); }}
+                            placeholder="Coupon code"
+                            className="flex-1 px-2.5 py-1.5 rounded-lg bg-secondary border border-border text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                            onKeyDown={(e) => e.key === "Enter" && handleCoupon(plan.key)}
+                          />
+                          <button
+                            onClick={() => handleCoupon(plan.key)}
+                            className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs font-medium hover:opacity-90 transition-opacity"
+                          >
+                            Apply
+                          </button>
+                        </div>
+                        {couponError && <p className="text-[10px] text-destructive text-center">{couponError}</p>}
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => { setCouponOpen(plan.key); setCouponCode(""); setCouponError(""); }}
+                        className="w-full flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        <Gift size={12} />
+                        Have a coupon?
+                      </button>
+                    )}
+                  </div>
                 )}
               </motion.div>
             );
