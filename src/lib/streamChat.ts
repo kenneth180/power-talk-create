@@ -105,13 +105,29 @@ const URL_PATTERNS = [
   /\b(?:go\s+to|open|visit|show\s+me|navigate\s+to|browse)\s+([a-z0-9][-a-z0-9]*(?:\.[a-z]{2,})+(?:\/[^\s]*)?)/i,
 ];
 
+const SEARCH_PATTERNS = [
+  { re: /\b(?:search\s+google|google\s+search|google)\s+(?:for\s+)?(.+)/i, url: (q: string) => `https://www.google.com/search?q=${encodeURIComponent(q)}` },
+  { re: /\b(?:search\s+youtube|youtube\s+search|youtube)\s+(?:for\s+)?(.+)/i, url: (q: string) => `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}` },
+  { re: /\b(?:search\s+github|github\s+search|github)\s+(?:for\s+)?(.+)/i, url: (q: string) => `https://github.com/search?q=${encodeURIComponent(q)}` },
+  { re: /\b(?:search\s+(?:the\s+)?web|web\s+search|search\s+(?:for|about))\s+(.+)/i, url: (q: string) => `https://www.google.com/search?q=${encodeURIComponent(q)}` },
+  { re: /\b(?:look\s+up|find)\s+(.+?)(?:\s+on\s+google)?$/i, url: (q: string) => `https://www.google.com/search?q=${encodeURIComponent(q)}` },
+];
+
 export function extractWebUrl(text: string): string | null {
+  // Direct URL commands first
   for (const re of URL_PATTERNS) {
     const match = text.match(re);
     if (match?.[1]) {
       let url = match[1];
       if (!/^https?:\/\//i.test(url)) url = "https://" + url;
       return url;
+    }
+  }
+  // Search commands
+  for (const { re, url } of SEARCH_PATTERNS) {
+    const match = text.match(re);
+    if (match?.[1]) {
+      return url(match[1].trim());
     }
   }
   return null;
