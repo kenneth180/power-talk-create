@@ -43,7 +43,7 @@ Rules:
             ...messages,
           ],
           stream: true,
-          max_completion_tokens: 10000,
+          max_completion_tokens: 500,
         }),
       }
     );
