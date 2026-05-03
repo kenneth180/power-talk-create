@@ -228,6 +228,7 @@ const Index = () => {
           prompt: content,
           isPro,
           plan: currentPlan,
+          styleId,
           onResult: async ({ imageUrl, text }) => {
             setMessages((prev) => ({
               ...prev,
