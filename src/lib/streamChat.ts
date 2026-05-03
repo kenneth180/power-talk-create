@@ -91,18 +91,24 @@ export async function streamChat({
   onDone();
 }
 
-const IMAGE_NOUNS = "(?:image|picture|pic|photo|photograph|illustration|art|artwork|painting|drawing|sketch|render|rendering|banner|logo|icon|graphic|wallpaper|poster|portrait|scene|landscape|avatar|thumbnail|cover|design|visual|emoji|sticker)";
-const IMAGE_VERBS = "(?:generate|create|make|draw|design|paint|sketch|render|produce|imagine|visualize|show\\s+me|give\\s+me|build)";
+const IMAGE_NOUNS = "(?:image|images|picture|pictures|pic|pics|photo|photos|photograph|illustration|illustrations|art|artwork|painting|paintings|drawing|drawings|sketch|sketches|render|rendering|renders|banner|banners|logo|logos|icon|icons|graphic|graphics|wallpaper|wallpapers|poster|posters|portrait|portraits|scene|scenes|landscape|landscapes|avatar|avatars|thumbnail|thumbnails|cover|covers|design|designs|visual|visuals|emoji|emojis|sticker|stickers|meme|memes|character|characters|mockup|mockups)";
+const IMAGE_VERBS = "(?:generate|create|make|draw|design|paint|sketch|render|produce|imagine|visualize|show\\s+me|give\\s+me|build|craft|illustrate|depict|compose|whip\\s+up|cook\\s+up|conjure)";
 
 const IMAGE_PATTERNS = [
   // "create an image", "draw a cat", "make me a picture of..."
-  new RegExp(`\\b${IMAGE_VERBS}\\b\\s+(?:me\\s+)?(?:a|an|the|some)?\\s*${IMAGE_NOUNS}\\b`, "i"),
+  new RegExp(`\\b${IMAGE_VERBS}\\b\\s+(?:me\\s+)?(?:a|an|the|some|another|one|two|three)?\\s*${IMAGE_NOUNS}\\b`, "i"),
   // "image of a cat", "picture showing..."
-  new RegExp(`\\b${IMAGE_NOUNS}\\b\\s+(?:of|for|with|about|showing|featuring|depicting)\\b`, "i"),
+  new RegExp(`\\b${IMAGE_NOUNS}\\b\\s+(?:of|for|with|about|showing|featuring|depicting|containing|including)\\b`, "i"),
   // "an image of...", "a photo of..."
-  new RegExp(`\\b(?:a|an|the)\\s+${IMAGE_NOUNS}\\b\\s+(?:of|with|about|showing)\\b`, "i"),
+  new RegExp(`\\b(?:a|an|the|some)\\s+${IMAGE_NOUNS}\\b\\s+(?:of|with|about|showing|featuring|depicting)\\b`, "i"),
   // direct: "draw <subject>", "paint <subject>" without needing the noun
-  /\b(?:draw|paint|sketch|illustrate)\s+(?:me\s+)?(?:a|an|the)\s+\w+/i,
+  /\b(?:draw|paint|sketch|illustrate|render|design)\s+(?:me\s+)?(?:a|an|the|some)\s+\w+/i,
+  // "I want/need an image..."
+  new RegExp(`\\b(?:i\\s+(?:want|need|would\\s+like|wanna|wish)|can\\s+you|could\\s+you|please|pls)\\s+(?:make|create|generate|draw|design|render|paint|have)\\s+(?:me\\s+)?(?:a|an|the)?\\s*${IMAGE_NOUNS}\\b`, "i"),
+  // "upgrade/enhance/improve this image"
+  new RegExp(`\\b(?:upgrade|enhance|improve|upscale|remake|redo|edit|modify|refine|beautify)\\b\\s+(?:this|that|the|my|our|an?)?\\s*${IMAGE_NOUNS}\\b`, "i"),
+  // shader / effect requests
+  /\b(?:add|with|using|apply)\s+(?:cool\s+|nice\s+|awesome\s+|epic\s+|sick\s+)?(?:shaders?|effects?|filters?|lighting|glow|neon|cinematic|bloom|hdr)\b/i,
 ];
 
 export function isImageRequest(text: string): boolean {

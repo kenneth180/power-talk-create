@@ -33,12 +33,12 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    // Enhance the prompt for best-quality image generation
-    const enhancedPrompt = `Create a stunning, ultra-high-quality, photorealistic image at exactly ${maxSize} resolution.
+    // Enhance the prompt for best-quality image generation — understands ANY subject
+    const enhancedPrompt = `Create a breathtaking, ultra-high-quality, photorealistic masterpiece image at exactly ${maxSize} resolution.
 
-Subject: ${prompt}
+Subject (interpret creatively and bring it to life — characters, objects, scenes, abstract concepts, anything): ${prompt}
 
-Requirements: razor-sharp focus, professional composition, cinematic lighting, rich vibrant colors, intricate fine details, perfect exposure, depth of field where appropriate, masterpiece quality. Render with maximum clarity, no blur, no artifacts, no watermarks, no text. 8K detail, award-winning photography style. Make every pixel count.`;
+Visual treatment: razor-sharp focus, professional cinematic composition, dramatic volumetric lighting, advanced shaders, realistic ray-traced reflections, subsurface scattering, ambient occlusion, bloom and glow effects, rich vibrant colors, intricate fine details on every surface, perfect exposure, beautiful depth of field, atmospheric haze where fitting, PBR materials, 8K detail, award-winning photography or concept art quality. Apply modern shader effects: specular highlights, fresnel rims, soft shadows, color grading. No blur, no artifacts, no watermarks, no text, no extra limbs or distortions. Every pixel polished. If a person is involved, render anatomy perfectly with lifelike skin, eyes, and hair.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
