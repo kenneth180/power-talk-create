@@ -152,12 +152,14 @@ export async function generateImage({
   prompt,
   isPro,
   plan,
+  styleId,
   onResult,
   onError,
 }: {
   prompt: string;
   isPro?: boolean;
   plan?: string;
+  styleId?: string;
   onResult: (data: { imageUrl: string; text: string }) => void;
   onError: (error: string) => void;
 }) {
@@ -168,7 +170,7 @@ export async function generateImage({
         "Content-Type": "application/json",
         Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
-      body: JSON.stringify({ prompt, isPro: !!isPro, plan: plan || (isPro ? "pro" : "free") }),
+      body: JSON.stringify({ prompt, isPro: !!isPro, plan: plan || (isPro ? "pro" : "free"), styleId }),
     });
 
     if (!resp.ok) {
