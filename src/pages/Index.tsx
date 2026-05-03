@@ -177,7 +177,7 @@ const Index = () => {
           ...prev,
           [chatId!]: [
             ...(prev[chatId!] || []),
-            { id: assistantId, role: "assistant" as const, content: "✏️ Editing your image...", timestamp: new Date() },
+            { id: assistantId, role: "assistant" as const, content: "✏️ Editing your image...", timestamp: new Date(), beforeImageUrl: imageBase64 },
           ],
         }));
         scrollToBottom();
@@ -185,11 +185,12 @@ const Index = () => {
         await editImage({
           prompt: content || "Enhance this image",
           imageUrl: imageBase64,
+          styleId,
           onResult: async ({ imageUrl, text }) => {
             setMessages((prev) => ({
               ...prev,
               [chatId!]: (prev[chatId!] || []).map((m) =>
-                m.id === assistantId ? { ...m, content: text, imageUrl } : m
+                m.id === assistantId ? { ...m, content: text, imageUrl, beforeImageUrl: imageBase64 } : m
               ),
             }));
             setIsLoading(false);
