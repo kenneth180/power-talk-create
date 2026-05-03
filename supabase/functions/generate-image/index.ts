@@ -33,6 +33,13 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
+    // Enhance the prompt for best-quality image generation
+    const enhancedPrompt = `Create a stunning, ultra-high-quality, photorealistic image at exactly ${maxSize} resolution.
+
+Subject: ${prompt}
+
+Requirements: razor-sharp focus, professional composition, cinematic lighting, rich vibrant colors, intricate fine details, perfect exposure, depth of field where appropriate, masterpiece quality. Render with maximum clarity, no blur, no artifacts, no watermarks, no text. 8K detail, award-winning photography style. Make every pixel count.`;
+
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -44,7 +51,7 @@ serve(async (req) => {
         messages: [
           {
             role: "user",
-            content: `Generate a high-quality image: ${prompt}. Make it exactly ${maxSize} pixels resolution, large and detailed.`,
+            content: enhancedPrompt,
           },
         ],
         modalities: ["image", "text"],
