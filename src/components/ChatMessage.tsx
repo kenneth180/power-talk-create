@@ -1,8 +1,9 @@
 import ReactMarkdown from "react-markdown";
 import { motion, AnimatePresence } from "framer-motion";
 import { Bot, User, Copy, Check, Download } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef, MouseEvent, TouchEvent } from "react";
 import { WebPreview } from "./WebPreview";
+import { BeforeAfter } from "./BeforeAfter";
 
 export interface Message {
   id: string;
@@ -10,6 +11,7 @@ export interface Message {
   content: string;
   timestamp: Date;
   imageUrl?: string;
+  beforeImageUrl?: string;
   webUrl?: string;
 }
 
@@ -61,7 +63,21 @@ export function ChatMessage({ message }: ChatMessageProps) {
             <p>{message.content}</p>
           ) : (
             <>
-              {message.imageUrl && (
+              {message.imageUrl && message.beforeImageUrl ? (
+                <div className="mb-3">
+                  <BeforeAfter before={message.beforeImageUrl} after={message.imageUrl} />
+                  <div className="mt-2 flex items-center gap-3 text-[11px] text-muted-foreground">
+                    <span>Drag the slider to compare</span>
+                    <button
+                      onClick={handleDownload}
+                      className="ml-auto flex items-center gap-1.5 hover:text-foreground transition-colors"
+                    >
+                      <Download size={12} />
+                      Download result
+                    </button>
+                  </div>
+                </div>
+              ) : message.imageUrl && (
                 <div className="mb-3">
                   <img
                     src={message.imageUrl}

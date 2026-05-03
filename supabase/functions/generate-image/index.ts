@@ -19,7 +19,7 @@ serve(async (req) => {
   }
 
   try {
-    const { prompt, isPro, plan } = await req.json();
+    const { prompt, isPro, plan, styleId } = await req.json();
     const tier = plan || (isPro ? "pro" : "free");
     const maxSize = SIZE_MAP[tier] || "1000x1000";
 
@@ -30,15 +30,31 @@ serve(async (req) => {
       );
     }
 
+    const STYLE_PROMPTS: Record<string, string> = {
+      auto: "",
+      photoreal: "STYLE: ultra photorealistic, DSLR photo, 8K, sharp focus, true-to-life skin and textures, natural lighting.",
+      anime: "STYLE: anime, vibrant cel-shading, studio-ghibli inspired, clean linework, expressive eyes, manga aesthetic.",
+      cyberpunk: "STYLE: cyberpunk, neon-lit streets, holographic signage, rain reflections, chromatic aberration, futuristic dystopia, blade runner mood.",
+      cinematic: "STYLE: cinematic lighting, dramatic chiaroscuro, anamorphic lens, film grain, teal and orange grade, hollywood blockbuster composition.",
+      "3d": "STYLE: octane 3D render, PBR materials, ray-traced reflections, subsurface scattering, ultra-detailed shaders, studio HDRI lighting.",
+      fantasy: "STYLE: epic fantasy art, painterly, magical atmosphere, volumetric god rays, intricate ornate details.",
+      watercolor: "STYLE: soft watercolor painting, pastel washes, paper texture, hand-painted brush strokes, dreamy.",
+      pixel: "STYLE: 16-bit pixel art, crisp retro game sprite, limited palette, dithering, nostalgic SNES vibe.",
+      comic: "STYLE: western comic book, bold ink outlines, halftone shading, dynamic action panels.",
+    };
+    const styleAddon = STYLE_PROMPTS[styleId || "auto"] || "";
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     // Enhance the prompt for best-quality image generation — understands ANY subject
-    const enhancedPrompt = `Create a breathtaking, ultra-high-quality, photorealistic masterpiece image at exactly ${maxSize} resolution.
+    const enhancedPrompt = `Create a breathtaking, ultra-high-quality masterpiece image at exactly ${maxSize} resolution.
 
-Subject (interpret creatively and bring it to life — characters, objects, scenes, abstract concepts, anything): ${prompt}
+Subject (interpret creatively and bring it to life): ${prompt}
 
-Visual treatment: razor-sharp focus, professional cinematic composition, dramatic volumetric lighting, advanced shaders, realistic ray-traced reflections, subsurface scattering, ambient occlusion, bloom and glow effects, rich vibrant colors, intricate fine details on every surface, perfect exposure, beautiful depth of field, atmospheric haze where fitting, PBR materials, 8K detail, award-winning photography or concept art quality. Apply modern shader effects: specular highlights, fresnel rims, soft shadows, color grading. No blur, no artifacts, no watermarks, no text, no extra limbs or distortions. Every pixel polished. If a person is involved, render anatomy perfectly with lifelike skin, eyes, and hair.`;
+${styleAddon}
+
+Visual treatment: razor-sharp focus, professional cinematic composition, dramatic volumetric lighting, advanced shaders, realistic ray-traced reflections, subsurface scattering, ambient occlusion, bloom and glow effects, rich vibrant colors, intricate fine details on every surface, perfect exposure, beautiful depth of field, PBR materials, 8K detail, award-winning quality. Specular highlights, fresnel rims, soft shadows, color grading. No blur, no artifacts, no watermarks, no text, no extra limbs or distortions. Every pixel polished. If a person is involved, render anatomy perfectly with lifelike skin, eyes, and hair.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",

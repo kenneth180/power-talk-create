@@ -1,9 +1,10 @@
 import { useState, useRef, KeyboardEvent, ClipboardEvent, ChangeEvent } from "react";
 import { Send, Image, Mic, Video, Paperclip, X } from "lucide-react";
 import { motion } from "framer-motion";
+import { StylePicker } from "./StylePicker";
 
 interface ChatInputProps {
-  onSend: (message: string, imageBase64?: string) => void;
+  onSend: (message: string, imageBase64?: string, styleId?: string) => void;
   isLoading: boolean;
 }
 
@@ -19,12 +20,13 @@ function fileToBase64(file: File): Promise<string> {
 export function ChatInput({ onSend, isLoading }: ChatInputProps) {
   const [input, setInput] = useState("");
   const [attachedImage, setAttachedImage] = useState<string | null>(null);
+  const [styleId, setStyleId] = useState<string>("auto");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSend = () => {
     if ((!input.trim() && !attachedImage) || isLoading) return;
-    onSend(input.trim(), attachedImage || undefined);
+    onSend(input.trim(), attachedImage || undefined, styleId);
     setInput("");
     setAttachedImage(null);
     if (textareaRef.current) {
@@ -145,9 +147,12 @@ export function ChatInput({ onSend, isLoading }: ChatInputProps) {
             </motion.button>
           </div>
         </div>
-        <p className="text-[10px] text-muted-foreground text-center mt-2">
-          Rock Assistant can make mistakes. Consider verifying important information.
-        </p>
+        <div className="flex items-center justify-between gap-2 mt-2 px-1">
+          <StylePicker value={styleId} onChange={setStyleId} />
+          <p className="text-[10px] text-muted-foreground text-right">
+            {attachedImage ? "Editing mode • before/after preview" : "Rock Assistant can make mistakes."}
+          </p>
+        </div>
       </div>
     </div>
   );

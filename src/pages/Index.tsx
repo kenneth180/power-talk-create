@@ -126,7 +126,7 @@ const Index = () => {
   );
 
   const sendMessage = useCallback(
-    async (content: string, imageBase64?: string) => {
+    async (content: string, imageBase64?: string, styleId?: string) => {
       let chatId = activeChatId;
       if (!chatId) {
         chatId = await createNewChat(content);
@@ -177,7 +177,7 @@ const Index = () => {
           ...prev,
           [chatId!]: [
             ...(prev[chatId!] || []),
-            { id: assistantId, role: "assistant" as const, content: "✏️ Editing your image...", timestamp: new Date() },
+            { id: assistantId, role: "assistant" as const, content: "✏️ Editing your image...", timestamp: new Date(), beforeImageUrl: imageBase64 },
           ],
         }));
         scrollToBottom();
@@ -185,11 +185,12 @@ const Index = () => {
         await editImage({
           prompt: content || "Enhance this image",
           imageUrl: imageBase64,
+          styleId,
           onResult: async ({ imageUrl, text }) => {
             setMessages((prev) => ({
               ...prev,
               [chatId!]: (prev[chatId!] || []).map((m) =>
-                m.id === assistantId ? { ...m, content: text, imageUrl } : m
+                m.id === assistantId ? { ...m, content: text, imageUrl, beforeImageUrl: imageBase64 } : m
               ),
             }));
             setIsLoading(false);
@@ -227,6 +228,7 @@ const Index = () => {
           prompt: content,
           isPro,
           plan: currentPlan,
+          styleId,
           onResult: async ({ imageUrl, text }) => {
             setMessages((prev) => ({
               ...prev,
@@ -433,7 +435,7 @@ const Index = () => {
           </div>
         )}
 
-        <ChatInput onSend={(msg, img) => sendMessage(msg, img)} isLoading={isLoading} />
+        <ChatInput onSend={(msg, img, style) => sendMessage(msg, img, style)} isLoading={isLoading} />
       </div>
 
       <UpgradeModal
