@@ -435,7 +435,7 @@ const Index = () => {
           </div>
         )}
 
-        <ChatInput onSend={(msg, img) => sendMessage(msg, img)} isLoading={isLoading} />
+        <ChatInput onSend={(msg, img, style) => sendMessage(msg, img, style)} isLoading={isLoading} />
       </div>
 
       <UpgradeModal
