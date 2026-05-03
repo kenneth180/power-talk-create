@@ -12,13 +12,29 @@ serve(async (req) => {
   }
 
   try {
-    const { prompt, imageUrl } = await req.json();
+    const STYLE_PROMPTS: Record<string, string> = {
+      auto: "",
+      photoreal: "ultra photorealistic, DSLR photo, 8K, sharp focus, true-to-life skin and textures, natural lighting",
+      anime: "anime style, vibrant cel-shading, studio-ghibli inspired, clean linework, expressive eyes",
+      cyberpunk: "cyberpunk aesthetic, neon-lit, holographic signage, rain reflections, chromatic aberration, futuristic dystopia",
+      cinematic: "cinematic lighting, dramatic chiaroscuro, anamorphic lens, film grain, teal and orange grade",
+      "3d": "octane 3D render, PBR materials, ray-traced reflections, subsurface scattering, ultra-detailed shaders, studio HDRI lighting",
+      fantasy: "epic fantasy art, painterly, magical atmosphere, volumetric god rays, intricate ornate details",
+      watercolor: "soft watercolor painting, pastel washes, paper texture, hand-painted brush strokes",
+      pixel: "16-bit pixel art, crisp retro game sprite, limited palette, dithering",
+      comic: "western comic book style, bold ink outlines, halftone shading, dynamic action panels",
+    };
+
+    const { prompt, imageUrl, styleId } = await req.json();
     if (!prompt || !imageUrl) {
       return new Response(
         JSON.stringify({ error: "Both prompt and imageUrl are required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    const styleAddon = STYLE_PROMPTS[styleId || "auto"] || "";
+    const editInstruction = `Edit this image with surgical precision while preserving the subject's identity. User request: ${prompt}.${styleAddon ? ` Apply this style: ${styleAddon}.` : ""} Enhance shaders, lighting, materials, and fine details. If improving a face, perfect the skin, eyes, hair, and proportions while keeping the person recognizable. No watermarks, no text, no distortions. Output a high-quality 1000x900 pixel result.`;
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
@@ -35,7 +51,7 @@ serve(async (req) => {
           {
             role: "user",
             content: [
-              { type: "text", text: `Edit this image: ${prompt}. Output a 1000x900 pixel high-quality result.` },
+              { type: "text", text: editInstruction },
               { type: "image_url", image_url: { url: imageUrl } },
             ],
           },
