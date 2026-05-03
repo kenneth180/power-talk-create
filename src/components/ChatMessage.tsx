@@ -1,7 +1,7 @@
 import ReactMarkdown from "react-markdown";
 import { motion, AnimatePresence } from "framer-motion";
 import { Bot, User, Copy, Check, Download } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef, MouseEvent, TouchEvent } from "react";
 import { WebPreview } from "./WebPreview";
 
 export interface Message {
@@ -10,6 +10,7 @@ export interface Message {
   content: string;
   timestamp: Date;
   imageUrl?: string;
+  beforeImageUrl?: string;
   webUrl?: string;
 }
 
