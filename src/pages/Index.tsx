@@ -126,7 +126,7 @@ const Index = () => {
   );
 
   const sendMessage = useCallback(
-    async (content: string, imageBase64?: string) => {
+    async (content: string, imageBase64?: string, styleId?: string) => {
       let chatId = activeChatId;
       if (!chatId) {
         chatId = await createNewChat(content);
