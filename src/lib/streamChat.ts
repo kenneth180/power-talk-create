@@ -193,11 +193,13 @@ export async function generateImage({
 export async function editImage({
   prompt,
   imageUrl,
+  styleId,
   onResult,
   onError,
 }: {
   prompt: string;
   imageUrl: string;
+  styleId?: string;
   onResult: (data: { imageUrl: string; text: string }) => void;
   onError: (error: string) => void;
 }) {
@@ -208,7 +210,7 @@ export async function editImage({
         "Content-Type": "application/json",
         Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
-      body: JSON.stringify({ prompt: prompt || "Enhance this image", imageUrl }),
+      body: JSON.stringify({ prompt: prompt || "Enhance this image", imageUrl, styleId }),
     });
 
     if (!resp.ok) {
