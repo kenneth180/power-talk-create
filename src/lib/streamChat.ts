@@ -91,9 +91,18 @@ export async function streamChat({
   onDone();
 }
 
+const IMAGE_NOUNS = "(?:image|picture|pic|photo|photograph|illustration|art|artwork|painting|drawing|sketch|render|rendering|banner|logo|icon|graphic|wallpaper|poster|portrait|scene|landscape|avatar|thumbnail|cover|design|visual|emoji|sticker)";
+const IMAGE_VERBS = "(?:generate|create|make|draw|design|paint|sketch|render|produce|imagine|visualize|show\\s+me|give\\s+me|build)";
+
 const IMAGE_PATTERNS = [
-  /\b(generate|create|make|draw|design|paint|sketch|render)\b.{0,20}\b(image|picture|photo|illustration|art|artwork|banner|logo|icon|graphic)\b/i,
-  /\b(image|picture|photo|illustration|art|artwork|banner|logo|icon|graphic)\b.{0,20}\b(of|for|with|about|showing)\b/i,
+  // "create an image", "draw a cat", "make me a picture of..."
+  new RegExp(`\\b${IMAGE_VERBS}\\b\\s+(?:me\\s+)?(?:a|an|the|some)?\\s*${IMAGE_NOUNS}\\b`, "i"),
+  // "image of a cat", "picture showing..."
+  new RegExp(`\\b${IMAGE_NOUNS}\\b\\s+(?:of|for|with|about|showing|featuring|depicting)\\b`, "i"),
+  // "an image of...", "a photo of..."
+  new RegExp(`\\b(?:a|an|the)\\s+${IMAGE_NOUNS}\\b\\s+(?:of|with|about|showing)\\b`, "i"),
+  // direct: "draw <subject>", "paint <subject>" without needing the noun
+  /\b(?:draw|paint|sketch|illustrate)\s+(?:me\s+)?(?:a|an|the)\s+\w+/i,
 ];
 
 export function isImageRequest(text: string): boolean {
