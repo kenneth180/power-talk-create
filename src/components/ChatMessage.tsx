@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Bot, User, Copy, Check, Download } from "lucide-react";
 import { useState, useRef, MouseEvent, TouchEvent } from "react";
 import { WebPreview } from "./WebPreview";
+import { BeforeAfter } from "./BeforeAfter";
 
 export interface Message {
   id: string;
