@@ -20,12 +20,13 @@ function fileToBase64(file: File): Promise<string> {
 export function ChatInput({ onSend, isLoading }: ChatInputProps) {
   const [input, setInput] = useState("");
   const [attachedImage, setAttachedImage] = useState<string | null>(null);
+  const [styleId, setStyleId] = useState<string>("auto");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSend = () => {
     if ((!input.trim() && !attachedImage) || isLoading) return;
-    onSend(input.trim(), attachedImage || undefined);
+    onSend(input.trim(), attachedImage || undefined, styleId);
     setInput("");
     setAttachedImage(null);
     if (textareaRef.current) {
