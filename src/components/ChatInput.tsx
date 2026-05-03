@@ -1,9 +1,10 @@
 import { useState, useRef, KeyboardEvent, ClipboardEvent, ChangeEvent } from "react";
 import { Send, Image, Mic, Video, Paperclip, X } from "lucide-react";
 import { motion } from "framer-motion";
+import { StylePicker } from "./StylePicker";
 
 interface ChatInputProps {
-  onSend: (message: string, imageBase64?: string) => void;
+  onSend: (message: string, imageBase64?: string, styleId?: string) => void;
   isLoading: boolean;
 }
 
