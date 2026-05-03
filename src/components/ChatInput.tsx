@@ -147,9 +147,12 @@ export function ChatInput({ onSend, isLoading }: ChatInputProps) {
             </motion.button>
           </div>
         </div>
-        <p className="text-[10px] text-muted-foreground text-center mt-2">
-          Rock Assistant can make mistakes. Consider verifying important information.
-        </p>
+        <div className="flex items-center justify-between gap-2 mt-2 px-1">
+          <StylePicker value={styleId} onChange={setStyleId} />
+          <p className="text-[10px] text-muted-foreground text-right">
+            {attachedImage ? "Editing mode • before/after preview" : "Rock Assistant can make mistakes."}
+          </p>
+        </div>
       </div>
     </div>
   );
